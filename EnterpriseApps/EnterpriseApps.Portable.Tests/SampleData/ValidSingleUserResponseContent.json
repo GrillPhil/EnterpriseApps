@@ -1,0 +1,40 @@
+﻿{
+    "results": [
+        {
+            "user": {
+                "gender": "female",
+                "name": {
+                    "title": "miss",
+                    "first": "sarra",
+                    "last": "van groningen"
+                },
+                "location": {
+                    "street": "6571 sterrenburg",
+                    "city": "mill en sint hubert",
+                    "state": "flevoland",
+                    "zip": 48350
+                },
+                "email": "sarra.van groningen@example.com",
+                "username": "yellowsnake364",
+                "password": "5329",
+                "salt": "pIkShoWM",
+                "md5": "68cb51ec383e87f0de19b9a46a3778a9",
+                "sha1": "ac486c02c9dc877fe1aef6f35e468820ed850fcb",
+                "sha256": "dcd10b2de68396b4272887a4fd66a5ba46e6b7372e1c4ae0eef7a69d1addcb10",
+                "registered": 1153508078,
+                "dob": 667088737,
+                "phone": "(090)-282-3850",
+                "cell": "(201)-611-3921",
+                "BSN": "29425548",
+                "picture": {
+                    "large": "https://randomuser.me/api/portraits/women/27.jpg",
+                    "medium": "https://randomuser.me/api/portraits/med/women/27.jpg",
+                    "thumbnail": "https://randomuser.me/api/portraits/thumb/women/27.jpg"
+                }
+            }
+        }
+    ],
+    "nationality": "NL",
+    "seed": "28d09d3614cf726c06",
+    "version": "0.7"
+}
