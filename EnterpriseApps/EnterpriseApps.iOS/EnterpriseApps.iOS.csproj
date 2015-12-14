@@ -126,6 +126,8 @@
     </Compile>
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="CustomUI\UserCell.cs" />
+    <Compile Include="Services\ImageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnterpriseApps.Portable\EnterpriseApps.Portable.csproj">
@@ -135,4 +137,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.10.6\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
+  <ItemGroup>
+    <Folder Include="CustomUI\" />
+  </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@ namespace EnterpriseApps.iOS
 			SimpleIoc.Default.Register<EnterpriseApps.Portable.Service.IResourceService, ResourceService>();
 			SimpleIoc.Default.Register<IDialogService, DialogService>();
 			SimpleIoc.Default.Register<IUserRepository, UserRepository>();
+			SimpleIoc.Default.Register<ImageService> ();
 
 			// Register ViewModels
 			SimpleIoc.Default.Register<UsersViewModel>();

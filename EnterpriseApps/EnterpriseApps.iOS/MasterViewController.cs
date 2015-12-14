@@ -4,19 +4,32 @@ using System.Linq;
 using UIKit;
 using Foundation;
 using CoreGraphics;
-using EnterpriseApps.Portable.Model;
 using EnterpriseApps.Portable.ViewModel;
 using Microsoft.Practices.ServiceLocation;
+using EnterpriseApps.Portable.Model;
+using System.Threading.Tasks;
+
 
 namespace EnterpriseApps.iOS
 {
-	public partial class MasterViewController : UITableViewController
+	public partial class MasterViewController : UITableViewController, IUISearchResultsUpdating
 	{
 		public DetailViewController DetailViewController { get; set; }
 
 		DataSource dataSource;
 	    private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
+		private UISearchController _searchController;
 
+		private List<User> _filteredUsers;
+
+
+		public void UpdateSearchResultsForSearchController (UISearchController searchController)
+		{
+			var searchText = _searchController.SearchBar.Text;
+			_filteredUsers = _usersViewModel.Users.ToList ().FindAll (e => e.FirstName.Contains (searchText) || e.LastName.Contains (searchText));
+
+			TableView.Source = new DataSource (this, _filteredUsers);
+		}
 
 		public MasterViewController (IntPtr handle) : base (handle)
 		{
@@ -35,18 +48,25 @@ namespace EnterpriseApps.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 			NavigationItem.LeftBarButtonItem = EditButtonItem;
 
-			var addButton = new UIBarButtonItem (UIBarButtonSystemItem.Add, AddNewItem);
-			addButton.AccessibilityLabel = "addButton";
-			NavigationItem.RightBarButtonItem = addButton;
+//			var addButton = new UIBarButtonItem (UIBarButtonSystemItem.Add, AddNewItem);
+//			addButton.AccessibilityLabel = "addButton";
+//			NavigationItem.RightBarButtonItem = addButton;
+			_searchController = new UISearchController(searchResultsController:null);
+			_searchController.SearchResultsUpdater = this;
+			_searchController.DimsBackgroundDuringPresentation = false;
+			_searchController.DefinesPresentationContext = false;
+			TableView.TableHeaderView = _searchController.SearchBar;
 
 			DetailViewController = (DetailViewController)((UINavigationController)SplitViewController.ViewControllers [1]).TopViewController;
 
 			if (_usersViewModel.Users != null) {
-				TableView.Source = dataSource = new DataSource (this, _usersViewModel.Users.ToList ());
+				_filteredUsers = _usersViewModel.Users.ToList ();
+				TableView.Source = dataSource = new DataSource (this, _filteredUsers);
 			}
 			_usersViewModel.PropertyChanged += (sender, e) => {
 				if(e.PropertyName == "Users" && ((UsersViewModel)sender).Users != null){
-					TableView.Source = dataSource = new DataSource (this, _usersViewModel.Users.ToList ());
+					_filteredUsers = _usersViewModel.Users.ToList ();
+					TableView.Source = dataSource = new DataSource (this, _filteredUsers);
 					TableView.ReloadData();
 				}
 			};
@@ -81,9 +101,10 @@ namespace EnterpriseApps.iOS
 
 		class DataSource : UITableViewSource
 		{
-			static readonly NSString CellIdentifier = new NSString ("Cell");
+			static readonly NSString CellIdentifier = new NSString ("UserCell");
 			readonly List<User> _objects = new List<User> ();
 			readonly MasterViewController _controller;
+			private ImageService _imageService = ServiceLocator.Current.GetInstance<ImageService>();
 
 			public DataSource (MasterViewController controller, List<User> objects)
 			{
@@ -109,10 +130,27 @@ namespace EnterpriseApps.iOS
 			// Customize the appearance of table view cells.
 			public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
 			{
-				var cell = tableView.DequeueReusableCell (CellIdentifier, indexPath);
+//				var cell = tableView.DequeueReusableCell (CellIdentifier, indexPath) as UserCell;
+//				if (cell == null)
+					var cell = new UserCell (CellIdentifier);
 
-				cell.TextLabel.Text = _objects [indexPath.Row].ToString ();
+				try{
+					((UserCell)cell).UserNameLabel.Text = ((User)_objects [indexPath.Row]).FirstName + " " + ((User)_objects [indexPath.Row]).LastName;
+					if(cell.UserImageView.Image == null){
+					Task.Run(async() => {
+							var indPath = indexPath;
+						var image = await _imageService.GetUserThumbnailAsync(((User)_objects [indexPath.Row]));
 
+							tableView.BeginInvokeOnMainThread(() =>{
+								cell.ImageView.Image = image;
+							});
+
+						
+					});
+					}
+				}catch(Exception ex){
+					Console.WriteLine (ex.StackTrace);
+				}
 				return cell;
 			}
 
@@ -137,6 +175,8 @@ namespace EnterpriseApps.iOS
 			{
 				if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
 					_controller.DetailViewController.SetDetailItem (_objects [indexPath.Row]);
+
+
 			}
 		}
 	}
