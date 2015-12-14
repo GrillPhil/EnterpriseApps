@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
 
 namespace EnterpriseApps.Portable.ViewModel
 {
@@ -71,7 +72,8 @@ namespace EnterpriseApps.Portable.ViewModel
             }
         }
 
-        public UsersViewModel(IUserRepository userRepository, IResourceService resourceService, IDialogService dialogService)
+
+		public UsersViewModel(IUserRepository userRepository, IResourceService resourceService, IDialogService dialogService)
         {
             _userRepository = userRepository;
             _resourceService = resourceService;
