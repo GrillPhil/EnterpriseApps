@@ -33,7 +33,7 @@ namespace EnterpriseApps.iOS
 
 		public MasterViewController (IntPtr handle) : base (handle)
 		{
-			Title = NSBundle.MainBundle.LocalizedString ("Master", "Master");
+			//Title = NSBundle.MainBundle.LocalizedString ("Master", "Master");
 			
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
 				PreferredContentSize = new CGSize (320f, 600f);
@@ -46,15 +46,11 @@ namespace EnterpriseApps.iOS
 			base.ViewDidLoad ();
 
 			// Perform any additional setup after loading the view, typically from a nib.
-			NavigationItem.LeftBarButtonItem = EditButtonItem;
-
-//			var addButton = new UIBarButtonItem (UIBarButtonSystemItem.Add, AddNewItem);
-//			addButton.AccessibilityLabel = "addButton";
-//			NavigationItem.RightBarButtonItem = addButton;
 			_searchController = new UISearchController(searchResultsController:null);
 			_searchController.SearchResultsUpdater = this;
 			_searchController.DimsBackgroundDuringPresentation = false;
 			_searchController.DefinesPresentationContext = false;
+			_searchController.HidesNavigationBarDuringPresentation = false;
 			TableView.TableHeaderView = _searchController.SearchBar;
 
 			DetailViewController = (DetailViewController)((UINavigationController)SplitViewController.ViewControllers [1]).TopViewController;
@@ -101,7 +97,7 @@ namespace EnterpriseApps.iOS
 
 		class DataSource : UITableViewSource
 		{
-			static readonly NSString CellIdentifier = new NSString ("UserCell");
+			static readonly string CellIdentifier = "UserCell";
 			readonly List<User> _objects = new List<User> ();
 			readonly MasterViewController _controller;
 			private ImageService _imageService = ServiceLocator.Current.GetInstance<ImageService>();
@@ -130,19 +126,21 @@ namespace EnterpriseApps.iOS
 			// Customize the appearance of table view cells.
 			public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
 			{
-//				var cell = tableView.DequeueReusableCell (CellIdentifier, indexPath) as UserCell;
-//				if (cell == null)
-					var cell = new UserCell (CellIdentifier);
-
+				var cell = tableView.DequeueReusableCell (CellIdentifier) as UserCell;
+				if (cell == null)
+					cell = new UserCell ((NSString)CellIdentifier);
+				var currentUser = (User)_objects [indexPath.Row];
 				try{
-					((UserCell)cell).UserNameLabel.Text = ((User)_objects [indexPath.Row]).FirstName + " " + ((User)_objects [indexPath.Row]).LastName;
+					((UserCell)cell).UserNameLabel.Text = currentUser.FirstName + " " + currentUser.LastName;
 					if(cell.UserImageView.Image == null){
 					Task.Run(async() => {
 							var indPath = indexPath;
 						var image = await _imageService.GetUserThumbnailAsync(((User)_objects [indexPath.Row]));
 
 							tableView.BeginInvokeOnMainThread(() =>{
-								cell.ImageView.Image = image;
+								if(cell.UserNameLabel.Text == $"{currentUser.FirstName} {currentUser.LastName}")
+									cell.UserImageView.Image = image;
+								//cell.SetNeedsDisplay();
 							});
 
 						
@@ -157,18 +155,7 @@ namespace EnterpriseApps.iOS
 			public override bool CanEditRow (UITableView tableView, NSIndexPath indexPath)
 			{
 				// Return false if you do not want the specified item to be editable.
-				return false;
-			}
-
-			public override void CommitEditingStyle (UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
-			{
-				//if (editingStyle == UITableViewCellEditingStyle.Delete) {
-				//	// Delete the row from the data source.
-				//	objects.RemoveAt (indexPath.Row);
-				//	controller.TableView.DeleteRows (new [] { indexPath }, UITableViewRowAnimation.Fade);
-				//} else if (editingStyle == UITableViewCellEditingStyle.Insert) {
-				//	// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-				//}
+				return true;
 			}
 
 			public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
