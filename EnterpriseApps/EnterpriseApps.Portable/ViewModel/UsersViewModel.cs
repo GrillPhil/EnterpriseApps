@@ -79,6 +79,9 @@ namespace EnterpriseApps.Portable.ViewModel
 
             InitCommand = new RelayCommand(Init);
             SelectUserCommand = new RelayCommand<User>(SelectUser);
+
+            if (IsInDesignMode)
+                LoadMockUsers();
         }
 
         private async void Init()
@@ -132,6 +135,14 @@ namespace EnterpriseApps.Portable.ViewModel
                 IsLoading = false;
                 LoadingMessage = null;
             }
+        }
+
+        private void LoadMockUsers()
+        {
+            Users = new ObservableCollection<User>()
+            {
+                new User() { FirstName = "Samuel", LastName = "Kim", ThumbnailUrl = "https://randomuser.me/api/portraits/thumb/women/70.jpg" }
+            };
         }
     }
 }

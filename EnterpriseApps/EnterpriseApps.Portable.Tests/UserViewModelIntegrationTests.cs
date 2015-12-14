@@ -15,7 +15,7 @@ namespace EnterpriseApps.Portable.Tests
     public class UserViewModelIntegrationTests
     {
         [TestCategory("Integration Tests")]
-        [Timeout(2000)]
+        [Timeout(5000)]
         [TestMethod]
         public async Task TestLoadUsersAsync()
         {
