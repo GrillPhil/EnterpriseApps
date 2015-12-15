@@ -7,6 +7,7 @@ using CoreGraphics;
 using EnterpriseApps.Portable.Model;
 using EnterpriseApps.Portable.ViewModel;
 using Microsoft.Practices.ServiceLocation;
+using System.Threading.Tasks;
 
 namespace EnterpriseApps.iOS
 {
@@ -84,6 +85,7 @@ namespace EnterpriseApps.iOS
 			static readonly NSString CellIdentifier = new NSString ("Cell");
 			readonly List<User> _objects = new List<User> ();
 			readonly MasterViewController _controller;
+			private ImageService _imageService = ServiceLocator.Current.GetInstance<ImageService>();
 
 			public DataSource (MasterViewController controller, List<User> objects)
 			{
@@ -109,10 +111,29 @@ namespace EnterpriseApps.iOS
 			// Customize the appearance of table view cells.
 			public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
 			{
-				var cell = tableView.DequeueReusableCell (CellIdentifier, indexPath);
+				var cell = tableView.DequeueReusableCell (CellIdentifier) as UserCell;
+				if (cell == null)
+					cell = new UserCell ((NSString)CellIdentifier);
+				var currentUser = (User)_objects [indexPath.Row];
+				try{
+					((UserCell)cell).UserNameLabel.Text = currentUser.FirstName + " " + currentUser.LastName;
+					if(cell.UserImageView.Image == null){
+						Task.Run(async() => {
+							var indPath = indexPath;
+							var image = await _imageService.GetUserThumbnailAsync(((User)_objects [indexPath.Row]));
 
-				cell.TextLabel.Text = _objects [indexPath.Row].ToString ();
+							tableView.BeginInvokeOnMainThread(() =>{
+								if(cell.UserNameLabel.Text == $"{currentUser.FirstName} {currentUser.LastName}")
+									cell.UserImageView.Image = image;
+								//cell.SetNeedsDisplay();
+							});
 
+
+						});
+					}
+				}catch(Exception ex){
+					Console.WriteLine (ex.StackTrace);
+				}
 				return cell;
 			}
 
