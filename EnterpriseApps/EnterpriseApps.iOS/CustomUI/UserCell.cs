@@ -32,7 +32,7 @@ namespace EnterpriseApps.iOS
 
 			_userImageView = new UIImageView
 			{
-				BackgroundColor = UIColor.FromRGB(0, 187, 241)
+				BackgroundColor = BootStrapper.AccentColor
 			};
 
 			ContentView.AddSubviews (_userNameLabel, _userImageView);
@@ -50,13 +50,10 @@ namespace EnterpriseApps.iOS
 		public override void LayoutSubviews ()
 		{
 			base.LayoutSubviews ();
-
 			_userImageView.Frame = new CGRect(ContentView.Bounds.X + 10, ContentView.Bounds.Y + ContentView.Bounds.Height * 0.125f, ContentView.Bounds.Height * 0.75f, ContentView.Bounds.Height* 0.75f);
 			_userImageView.Layer.CornerRadius = _userImageView.Frame.Width / 2.0f;
 			_userImageView.Layer.MasksToBounds = true;
-
 			_userNameLabel.Frame = new CGRect(_userImageView.Frame.GetMaxX() + 15, 0, ContentView.Frame.Width - (ContentView.Frame.Height + 10), ContentView.Frame.Height);
-
 		}
 
 	}

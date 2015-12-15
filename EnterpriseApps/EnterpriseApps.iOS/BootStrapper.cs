@@ -6,12 +6,15 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
 using IResourceService = System.ComponentModel.Design.IResourceService;
+using UIKit;
 
 
 namespace EnterpriseApps.iOS
 {
 	public static class BootStrapper
 	{
+		public static UIColor AccentColor = UIColor.FromRGB(51, 102,153);
+
 		public static void Init ()
 		{
 

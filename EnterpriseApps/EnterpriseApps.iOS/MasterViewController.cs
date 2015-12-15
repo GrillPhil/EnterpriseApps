@@ -4,25 +4,34 @@ using System.Linq;
 using UIKit;
 using Foundation;
 using CoreGraphics;
-using EnterpriseApps.Portable.Model;
 using EnterpriseApps.Portable.ViewModel;
 using Microsoft.Practices.ServiceLocation;
+using EnterpriseApps.Portable.Model;
 using System.Threading.Tasks;
+
 
 namespace EnterpriseApps.iOS
 {
-	public partial class MasterViewController : UITableViewController
+	public partial class MasterViewController : UITableViewController, IUISearchResultsUpdating
 	{
 		public DetailViewController DetailViewController { get; set; }
 
 		DataSource dataSource;
-	    private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
+		private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
+		private UISearchController _searchController;
+		private List<User> _filteredUsers;
 
+
+		public void UpdateSearchResultsForSearchController (UISearchController searchController)
+		{
+			var searchText = _searchController.SearchBar.Text;
+			_filteredUsers = _usersViewModel.Users.ToList ().FindAll (e => e.FirstName.Contains (searchText) || e.LastName.Contains (searchText));
+
+			TableView.Source = new DataSource (this, _filteredUsers);
+		}
 
 		public MasterViewController (IntPtr handle) : base (handle)
 		{
-			Title = NSBundle.MainBundle.LocalizedString ("Master", "Master");
-			
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
 				PreferredContentSize = new CGSize (320f, 600f);
 				ClearsSelectionOnViewWillAppear = false;
@@ -33,37 +42,36 @@ namespace EnterpriseApps.iOS
 		{
 			base.ViewDidLoad ();
 
-			// Perform any additional setup after loading the view, typically from a nib.
-			NavigationItem.LeftBarButtonItem = EditButtonItem;
-
-			var addButton = new UIBarButtonItem (UIBarButtonSystemItem.Add, AddNewItem);
-			addButton.AccessibilityLabel = "addButton";
-			NavigationItem.RightBarButtonItem = addButton;
+			_searchController = new UISearchController(searchResultsController:null);
+			_searchController.SearchResultsUpdater = this;
+			_searchController.DimsBackgroundDuringPresentation = false;
+			_searchController.DefinesPresentationContext = false;
+			_searchController.HidesNavigationBarDuringPresentation = false;
+				NavigationItem.TitleView = _searchController.SearchBar;
 
 			DetailViewController = (DetailViewController)((UINavigationController)SplitViewController.ViewControllers [1]).TopViewController;
 
+
 			if (_usersViewModel.Users != null) {
-				TableView.Source = dataSource = new DataSource (this, _usersViewModel.Users.ToList ());
+				_filteredUsers = _usersViewModel.Users.ToList ();
+				TableView.Source = dataSource = new DataSource (this, _filteredUsers);
 			}
 			_usersViewModel.PropertyChanged += (sender, e) => {
 				if(e.PropertyName == "Users" && ((UsersViewModel)sender).Users != null){
-					TableView.Source = dataSource = new DataSource (this, _usersViewModel.Users.ToList ());
+					_filteredUsers = _usersViewModel.Users.ToList ();
+					TableView.Source = dataSource = new DataSource (this, _filteredUsers);
 					TableView.ReloadData();
 				}
 			};
-
 		}
 
 		public override void DidReceiveMemoryWarning ()
 		{
 			base.DidReceiveMemoryWarning ();
-			// Release any cached data, images, etc that aren't in use.
 		}
 
 		void AddNewItem (object sender, EventArgs args)
 		{
-			//dataSource.Objects.Insert (0, DateTime.Now);
-
 			using (var indexPath = NSIndexPath.FromRowSection (0, 0))
 				TableView.InsertRows (new [] { indexPath }, UITableViewRowAnimation.Automatic);
 		}
@@ -82,7 +90,7 @@ namespace EnterpriseApps.iOS
 
 		class DataSource : UITableViewSource
 		{
-			static readonly NSString CellIdentifier = new NSString ("Cell");
+			static readonly string CellIdentifier = "UserCell";
 			readonly List<User> _objects = new List<User> ();
 			readonly MasterViewController _controller;
 			private ImageService _imageService = ServiceLocator.Current.GetInstance<ImageService>();
@@ -90,7 +98,7 @@ namespace EnterpriseApps.iOS
 			public DataSource (MasterViewController controller, List<User> objects)
 			{
 				this._controller = controller;
-			    this._objects = objects;
+				this._objects = objects;
 			}
 
 			public IList<User> Objects {
@@ -117,20 +125,19 @@ namespace EnterpriseApps.iOS
 				var currentUser = (User)_objects [indexPath.Row];
 				try{
 					((UserCell)cell).UserNameLabel.Text = currentUser.FirstName + " " + currentUser.LastName;
-					if(cell.UserImageView.Image == null){
-						Task.Run(async() => {
-							var indPath = indexPath;
-							var image = await _imageService.GetUserThumbnailAsync(((User)_objects [indexPath.Row]));
+					((UserCell)cell).UserImageView.Image = null;
+					Task.Run(async() => {
+							var user = currentUser;
+							var image = _imageService.GetUserThumbnailAsync(((User)_objects [indexPath.Row]));
 
 							tableView.BeginInvokeOnMainThread(() =>{
-								if(cell.UserNameLabel.Text == $"{currentUser.FirstName} {currentUser.LastName}")
+								if(cell.UserNameLabel.Text == $"{user.FirstName} {user.LastName}")
 									cell.UserImageView.Image = image;
-								//cell.SetNeedsDisplay();
 							});
 
 
 						});
-					}
+
 				}catch(Exception ex){
 					Console.WriteLine (ex.StackTrace);
 				}
@@ -140,24 +147,21 @@ namespace EnterpriseApps.iOS
 			public override bool CanEditRow (UITableView tableView, NSIndexPath indexPath)
 			{
 				// Return false if you do not want the specified item to be editable.
-				return false;
-			}
-
-			public override void CommitEditingStyle (UITableView tableView, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
-			{
-				//if (editingStyle == UITableViewCellEditingStyle.Delete) {
-				//	// Delete the row from the data source.
-				//	objects.RemoveAt (indexPath.Row);
-				//	controller.TableView.DeleteRows (new [] { indexPath }, UITableViewRowAnimation.Fade);
-				//} else if (editingStyle == UITableViewCellEditingStyle.Insert) {
-				//	// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-				//}
+				return true;
 			}
 
 			public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
 			{
-				if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+				if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
 					_controller.DetailViewController.SetDetailItem (_objects [indexPath.Row]);
+					return;
+				}
+
+				var detailView = new DetailViewController (_objects [indexPath.Row]);
+				detailView.View.BackgroundColor = BootStrapper.AccentColor;
+				_controller.NavigationController.PushViewController (detailView, true);
+
+
 			}
 		}
 	}

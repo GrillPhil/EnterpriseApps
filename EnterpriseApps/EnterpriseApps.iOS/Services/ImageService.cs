@@ -18,7 +18,7 @@ namespace EnterpriseApps.iOS
 			_pictureDictionary = new Dictionary<string, UIImage> ();
 		}
 
-		public async Task<UIImage> GetUserThumbnailAsync(User user){
+		public  UIImage GetUserThumbnailAsync(User user){
 			if (_thumbnailDictionary.ContainsKey (user.Email))
 				return _thumbnailDictionary [user.Email];
 			if(user.ThumbnailUrl == null)
@@ -35,7 +35,7 @@ namespace EnterpriseApps.iOS
 			if(user.PictureUrl == null)
 				return new UIImage();
 
-			var image = LoadImage(user.ThumbnailUrl);
+			var image = LoadImage(user.PictureUrl);
 			_pictureDictionary [user.Email] = image;
 			return image;
 		}
