@@ -30,7 +30,7 @@ namespace EnterpriseApps.Portable.Service
             if (dto.User.Picture != null)
             {
                 model.ThumbnailUrl = dto.User.Picture.Thumbnail;
-                model.PictureUrl = dto.User.Picture.Large;
+                model.PictureUrl = dto.User.Picture.Medium;
             }
 
             model.Cell = dto.User.Cell;

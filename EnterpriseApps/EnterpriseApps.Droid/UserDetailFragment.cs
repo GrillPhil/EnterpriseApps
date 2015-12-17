@@ -15,6 +15,10 @@ using EnterpriseApps.Portable.Model;
 using EnterpriseApps.Portable.ViewModel;
 using Microsoft.Practices.ServiceLocation;
 using Android.Support.Design.Widget;
+using Java.Net;
+using Android.Graphics;
+using System.Threading.Tasks;
+using Java.Lang;
 
 namespace EnterpriseApps.Droid
 {
@@ -29,7 +33,8 @@ namespace EnterpriseApps.Droid
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-		public static readonly int ARG_ITEM_ID = 0;
+		public static readonly string ARG_ITEM_ID = "0";
+
 		private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
 		/**
      * The dummy content this fragment is presenting.
@@ -45,17 +50,18 @@ namespace EnterpriseApps.Droid
 
 		public override void OnCreate(Bundle savedInstanceState) {
 			base.OnCreate(savedInstanceState);
+
 			if (Arguments.ContainsKey(ARG_ITEM_ID.ToString())) {
 				// Load the dummy content specified by the fragment
 				// arguments. In a real-world scenario, use a Loader
 				// to load content from a content provider.
-				mItem = _usersViewModel.Users[ARG_ITEM_ID];
+				mItem = _usersViewModel.SelectedUser;
 
 				Activity activity = this.Activity;
-				var appBarLayout = (CollapsingToolbarLayout) activity.FindViewById(Resource.Id.toolbar_layout);
-				if (appBarLayout != null) {
-					appBarLayout.SetTitle(mItem.LastName);
-				}
+//				var appBarLayout = (CollapsingToolbarLayout) activity.FindViewById(Resource.Id.toolbar_layout);
+//				if (appBarLayout != null) {
+//					appBarLayout.SetTitle(mItem.LastName);
+//				}
 			}
 		}
 
@@ -66,11 +72,38 @@ namespace EnterpriseApps.Droid
 
 			// Show the dummy content as text in a TextView.
 			if (mItem != null) {
-				((TextView)rootView.FindViewById (Resource.Id.user_detail)).Text = mItem.FirstName;
+				((TextView)rootView.FindViewById (Resource.Id.user_name)).Text = $"{mItem.FirstName} {mItem.LastName}";
+				((TextView)rootView.FindViewById (Resource.Id.mail_header)).Text = $"[Email]";
+				((TextView)rootView.FindViewById (Resource.Id.user_mail)).Text = mItem.Email;
+				((TextView)rootView.FindViewById (Resource.Id.phone_header)).Text = $"[Telefon]";
+				((TextView)rootView.FindViewById (Resource.Id.user_phone)).Text = mItem.Phone;
+				((TextView)rootView.FindViewById (Resource.Id.cell_header)).Text = $"[Mobil]";
+				((TextView)rootView.FindViewById (Resource.Id.user_cell)).Text = mItem.Cell;
+
+				var imageView = (ImageView)rootView.FindViewById (Resource.Id.user_image);
+
+				Handler handler = new Handler (Context.MainLooper);
+
+				Task.Run (() => {
+					var imageBitmap = ((ImageService)ServiceLocator.Current.GetInstance<ImageService>()).GetUserPicture(mItem);
+					Runnable runnable = new Runnable (() => {
+						imageView.SetImageBitmap (imageBitmap);
+					});
+					handler.Post (runnable);
+				});
+
+
+
+
+					
+
+
+
 			}
 
 			return rootView;
 		}
 }
+		
 }
 

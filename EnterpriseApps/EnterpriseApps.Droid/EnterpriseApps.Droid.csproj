@@ -88,6 +88,7 @@
     <Compile Include="UserDetailFragment.cs" />
     <Compile Include="BootStrapper.cs" />
     <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Services\ImageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
@@ -106,6 +107,8 @@
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values-v21\styles.xml" />
+    <AndroidResource Include="Resources\drawable\TransparentEllipse.png" />
+    <AndroidResource Include="Resources\drawable\TransparentEllipse_white.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />

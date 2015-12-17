@@ -15,13 +15,16 @@ using Android.Support.V7.App;
 using EnterpriseApps.Portable.ViewModel;
 using Microsoft.Practices.ServiceLocation;
 using EnterpriseApps.Portable.Model;
+using System.Threading.Tasks;
+using Java.Lang;
+using Android.Graphics;
 
 namespace EnterpriseApps.Droid
 {
-	[Activity (Label = "UserListActivity", MainLauncher = true, Icon = "@drawable/icon")]			
+	[Activity (Label = "Userliste", MainLauncher = true, Icon = "@drawable/icon")]			
 	public class UserListActivity : AppCompatActivity
 	{
-		private bool mTwoPane;
+		private static bool mTwoPane;
 
 		private UsersViewModel _usersViewModel;
 
@@ -29,13 +32,17 @@ namespace EnterpriseApps.Droid
 		{
 			base.OnCreate (savedInstanceState);
 			// Create your application here
-			BootStrapper.Init();
+
+				BootStrapper.Init();
+
+
 			_usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel> ();
 
 
 			SetContentView (Resource.Layout.activity_user_list);
 			var toolbar = (Android.Support.V7.Widget.Toolbar)FindViewById (Resource.Id.toolbar);
 			SetSupportActionBar(toolbar);
+			toolbar.Title = "[Userliste]";
 
 			var recyclerView = FindViewById (Resource.Id.user_list);
 			_usersViewModel.PropertyChanged += (sender, e) => {
@@ -55,16 +62,22 @@ namespace EnterpriseApps.Droid
 
 		}
 
+		protected override void OnPause ()
+		{
+			base.OnPause ();
+		}
+
 		private void SetupRecyclerView(RecyclerView recyclerView) {
-			recyclerView.SetAdapter(new SimpleItemRecyclerViewAdapter(_usersViewModel.Users.ToList()));
+			recyclerView.SetAdapter(new SimpleItemRecyclerViewAdapter(_usersViewModel.Users.ToList(), mTwoPane, this.BaseContext));
 		}
 
 
-	}
+	
 
 	public class SimpleItemRecyclerViewAdapter:RecyclerView.Adapter {
 
 		private List<User> users;
+			private Context _context;
 
 		#region implemented abstract members of Adapter
 
@@ -74,8 +87,9 @@ namespace EnterpriseApps.Droid
 
 		#endregion
 
-		public SimpleItemRecyclerViewAdapter(List<User> items) {
+			public SimpleItemRecyclerViewAdapter(List<User> items, bool mTwoPane, Context context) {
 			users = items;
+				_context = context;
 		}
 
 
@@ -85,51 +99,70 @@ namespace EnterpriseApps.Droid
 		}
 
 
-		public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-			((ViewHolder)holder).mItem = users[position];
-			((ViewHolder)holder).mIdView.Text =  position + "";
+			public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+				((ViewHolder)holder).mItem = users[position];
+				((ViewHolder)holder).mIdView.SetImageBitmap (null);
+				Handler handler = new Handler (_context.MainLooper);
+
+				Task.Run (() => {
+					var imageBitmap = ((ImageService)ServiceLocator.Current.GetInstance<ImageService>()).GetUserThumbnail(((ViewHolder)holder).mItem);
+					Runnable runnable = new Runnable (() => {
+						((ViewHolder)holder).mIdView.SetImageBitmap (imageBitmap);
+					});
+					handler.Post (runnable);
+				});
+
+			//((ViewHolder)holder).mIdView.Text =  position + "";
 			((ViewHolder)holder).mContentView.Text =  $"{(users[position]).FirstName} {(users[position]).LastName}";
 
 
-			//((ViewHolder)holder).mView.SetOnClickListener (new ClickListener (mTwoPane));
+				((ViewHolder)holder).mView.SetOnClickListener (new ClickListener ((ViewHolder)holder));
 		}
 
-//			internal class ClickListener:View.IOnClickListener{
-//					#region IOnClickListener implementation
-//
-//			private bool mTwoPane;
-//
-//			public ClickListener(bool mTwoPane){
-//				mTwoPane = mTwoPane;
-//			}
-//
-//					public void OnClick (View v)
-//					{
-//						if (mTwoPane) {
-//							var arguments = new Bundle();
-//							arguments.PutString(UserDetailFragment.ARG_ITEM_ID.ToString, ((ViewHolder)holder).mItem);
-//							UserDetailFragment fragment = new UserDetailFragment();
-//					fragment.Argumnets = arguments;
-//							SupportFragmentManager.BeginTransaction()
+
+
+			class ClickListener:Java.Lang.Object, View.IOnClickListener{
+					
+				private ViewHolder _holder;
+
+				public ClickListener(ViewHolder holder){
+					_holder = holder;
+
+			}
+
+				public void OnClick (View v)
+					{
+						if (mTwoPane) {
+							var arguments = new Bundle();
+						arguments.PutString(UserDetailFragment.ARG_ITEM_ID.ToString(), _holder.mItem.FirstName);
+							UserDetailFragment fragment = new UserDetailFragment();
+					fragment.Arguments = arguments;
+
+					
+//						.BeginTransaction()
 //								.Replace(Resource.Id.user_detail_container, fragment)
 //								.Commit();
-//						} else {
-//							Context context = vo;
-//					Intent intent = new Intent(context, typeof(UserDetailActivity));
-//							intent.putExtra(UserDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-//
-//							context.startActivity(intent);
-//						}
-//
-//					}
-//
-//					#endregion
+						} else {
+							Context context = v.Context;
+						ServiceLocator.Current.GetInstance<UsersViewModel> ().SelectUserCommand.Execute(_holder.mItem);
+
+						Intent intent = new Intent(context, typeof(UserDetailActivity));
+						intent.PutExtra(UserDetailFragment.ARG_ITEM_ID, _holder.mItem.FirstName);
+						context.StartActivity(intent);
+						}
+
+
+					}
+					
+
+					
 //
 //					#region IDisposable implementation
 //
 //					public void Dispose ()
 //					{
-//						throw new NotImplementedException ();
+//						//throw new NotImplementedException ();
 //					}
 //
 //					#endregion
@@ -138,31 +171,31 @@ namespace EnterpriseApps.Droid
 //
 //					public IntPtr Handle {
 //						get {
-//							throw new NotImplementedException ();
+//						return 
 //						}
 //					}
 //
 //					#endregion
 //
-//
-//
-//				}
+
+
+				}
 
 		public class ViewHolder:RecyclerView.ViewHolder {
 			public  View mView;
-			public  TextView mIdView;
+			public  ImageView mIdView;
 			public  TextView mContentView;
-			public object mItem;
+			public User mItem;
 
 			public ViewHolder(View view):base(view) {
 				
 				mView = view;
-				mIdView = (TextView) view.FindViewById(Resource.Id.id);
+					mIdView = (ImageView) view.FindViewById(Resource.Id.user_thumbnail);
 				mContentView = (TextView) view.FindViewById(Resource.Id.content);
 			}
 
 
-			public override String ToString() {
+			public override string ToString() {
 				return base.ToString() + " '" + mContentView.Text + "'";
 			}
 		}
@@ -171,4 +204,4 @@ namespace EnterpriseApps.Droid
 	
 
 }
-
+}

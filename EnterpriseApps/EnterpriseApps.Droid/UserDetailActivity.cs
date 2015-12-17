@@ -13,24 +13,28 @@ using Android.Widget;
 
 using Android.Support.V7.App;
 using Android.Support.V4.App;
+using Microsoft.Practices.ServiceLocation;
+using EnterpriseApps.Portable.ViewModel;
 
 namespace EnterpriseApps.Droid
 {
-	[Activity (Label = "UserDetailActivity")]			
+	[Activity (Label = "Detail")]			
 	public class UserDetailActivity : AppCompatActivity
 	{
-		
+		private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
+
 		protected override void OnCreate(Bundle savedInstanceState) {
 			base.OnCreate(savedInstanceState);
+
 			SetContentView(Resource.Layout.activity_user_detail);
 			var toolbar = (Android.Support.V7.Widget.Toolbar) FindViewById(Resource.Id.detail_toolbar);
 			SetSupportActionBar(toolbar);
 
-
 			// Show the Up button in the action bar.
 			Android.Support.V7.App.ActionBar actionBar = SupportActionBar;
 			if (actionBar != null) {
-				actionBar.SetDisplayHomeAsUpEnabled(true);
+				//actionBar.SetDisplayHomeAsUpEnabled(true);
+				actionBar.Title = "Hallo!";
 			}
 
 			// savedInstanceState is non-null when there is fragment state
@@ -52,7 +56,7 @@ namespace EnterpriseApps.Droid
 				fragment.Arguments = arguments;
 				var fragmentTransaction = SupportFragmentManager.BeginTransaction ();
 				fragmentTransaction.Add (Resource.Id.user_detail_container, fragment).Commit ();
-
+				SupportActionBar.Title = $"{_usersViewModel.SelectedUser.FirstName} {_usersViewModel.SelectedUser.LastName}";
 			}
 		}
 
