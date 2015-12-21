@@ -28,6 +28,7 @@ namespace EnterpriseApps.iOS
 			_filteredUsers = _usersViewModel.Users.ToList ().FindAll (e => e.FirstName.Contains (searchText) || e.LastName.Contains (searchText));
 
 			TableView.Source = new DataSource (this, _filteredUsers);
+			TableView.ReloadData ();
 		}
 
 		public MasterViewController (IntPtr handle) : base (handle)
@@ -48,6 +49,7 @@ namespace EnterpriseApps.iOS
 			_searchController.DefinesPresentationContext = false;
 			_searchController.HidesNavigationBarDuringPresentation = false;
 				NavigationItem.TitleView = _searchController.SearchBar;
+
 
 			DetailViewController = (DetailViewController)((UINavigationController)SplitViewController.ViewControllers [1]).TopViewController;
 
@@ -126,6 +128,7 @@ namespace EnterpriseApps.iOS
 				try{
 					((UserCell)cell).UserNameLabel.Text = currentUser.FirstName + " " + currentUser.LastName;
 					((UserCell)cell).UserImageView.Image = null;
+
 					Task.Run(async() => {
 							var user = currentUser;
 							var image = _imageService.GetUserThumbnailAsync(((User)_objects [indexPath.Row]));
