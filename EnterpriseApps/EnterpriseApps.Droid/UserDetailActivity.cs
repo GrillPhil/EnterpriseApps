@@ -21,22 +21,17 @@ namespace EnterpriseApps.Droid
 	[Activity (Label = "Detail")]			
 	public class UserDetailActivity : AppCompatActivity
 	{
-		private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
+		private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel> ();
 
-		protected override void OnCreate(Bundle savedInstanceState) {
-			base.OnCreate(savedInstanceState);
+		protected override void OnCreate (Bundle savedInstanceState)
+		{
+			base.OnCreate (savedInstanceState);
 
-			SetContentView(Resource.Layout.activity_user_detail);
-			var toolbar = (Android.Support.V7.Widget.Toolbar) FindViewById(Resource.Id.detail_toolbar);
-			SetSupportActionBar(toolbar);
+			SetContentView (Resource.Layout.activity_user_detail);
+			var toolbar = (Android.Support.V7.Widget.Toolbar)FindViewById (Resource.Id.detail_toolbar);
+			SetSupportActionBar (toolbar);
 
-			// Show the Up button in the action bar.
 			Android.Support.V7.App.ActionBar actionBar = SupportActionBar;
-			if (actionBar != null) {
-				//actionBar.SetDisplayHomeAsUpEnabled(true);
-				actionBar.Title = "Hallo!";
-			}
-
 			// savedInstanceState is non-null when there is fragment state
 			// saved from previous configurations of this activity
 			// (e.g. when rotating the screen from portrait to landscape).
@@ -47,13 +42,7 @@ namespace EnterpriseApps.Droid
 			// http://developer.android.com/guide/components/fragments.html
 			//
 			if (savedInstanceState == null) {
-				// Create the detail fragment and add it to the activity
-				// using a fragment transaction.
-				Bundle arguments = new Bundle();
-				arguments.PutString(UserDetailFragment.ARG_ITEM_ID.ToString(),
-					Intent.GetStringExtra(UserDetailFragment.ARG_ITEM_ID.ToString()));
-				var fragment = new UserDetailFragment();
-				fragment.Arguments = arguments;
+				var fragment = new UserDetailFragment ();
 				var fragmentTransaction = SupportFragmentManager.BeginTransaction ();
 				fragmentTransaction.Add (Resource.Id.user_detail_container, fragment).Commit ();
 				SupportActionBar.Title = $"{_usersViewModel.SelectedUser.FirstName} {_usersViewModel.SelectedUser.LastName}";
@@ -61,7 +50,8 @@ namespace EnterpriseApps.Droid
 		}
 
 
-		public override bool OnOptionsItemSelected(IMenuItem item) {
+		public override bool OnOptionsItemSelected (IMenuItem item)
+		{
 			int id = item.ItemId;
 			if (id == Android.Resource.Id.Home) {
 				// This ID represents the Home or Up button. In the case of this
@@ -71,10 +61,10 @@ namespace EnterpriseApps.Droid
 				//
 				// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 				//
-				NavUtils.NavigateUpTo(this, new Intent(this, typeof(UserListActivity)));
+				NavUtils.NavigateUpTo (this, new Intent (this, typeof(UserListActivity)));
 				return true;
 			}
-			return base.OnOptionsItemSelected(item);
+			return base.OnOptionsItemSelected (item);
 		}
 	}
 }
