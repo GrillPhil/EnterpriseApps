@@ -23,6 +23,13 @@ namespace EnterpriseApps.iOS
             var usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
             usersViewModel.InitCommand.Execute(null);
 
+//			UINavigationBar.Appearance.SetBackgroundImage(new UIImage(), UIBarMetrics.Default);
+//			UINavigationBar.Appearance.BackgroundColor = BootStrapper.AccentColor;
+//			UINavigationBar.Appearance.BarTintColor = BootStrapper.AccentColor;
+//
+//			UIApplication.SharedApplication.SetStatusBarHidden(false, false);
+//			UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
+
 			// Override point for customization after application launch.
 			var splitViewController = (UISplitViewController)Window.RootViewController;
 			var navigationController = (UINavigationController)splitViewController.ViewControllers [1];

@@ -21,6 +21,9 @@ namespace EnterpriseApps.iOS
 		private UISearchController _searchController;
 		private List<User> _filteredUsers;
 
+		private UIColor _defaultNavigationBarColor;
+		private UIColor _defaultNavigationBarTintColor;
+		private UIImage _defaultNavigationBarShadowImage;
 
 		public void UpdateSearchResultsForSearchController (UISearchController searchController)
 		{
@@ -42,13 +45,18 @@ namespace EnterpriseApps.iOS
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
+			_defaultNavigationBarColor = NavigationController.NavigationBar.BarTintColor;
+			_defaultNavigationBarTintColor = NavigationController.NavigationBar.TintColor;
+			_defaultNavigationBarShadowImage = NavigationController.NavigationBar.ShadowImage;
 
+			SplitViewController.PreferredDisplayMode = UISplitViewControllerDisplayMode.AllVisible;
 			_searchController = new UISearchController(searchResultsController:null);
 			_searchController.SearchResultsUpdater = this;
 			_searchController.DimsBackgroundDuringPresentation = false;
 			_searchController.DefinesPresentationContext = false;
 			_searchController.HidesNavigationBarDuringPresentation = false;
-				NavigationItem.TitleView = _searchController.SearchBar;
+			_searchController.SearchBar.Placeholder = "[Suchen]";
+			NavigationItem.TitleView = _searchController.SearchBar;
 
 
 			DetailViewController = (DetailViewController)((UINavigationController)SplitViewController.ViewControllers [1]).TopViewController;
@@ -88,6 +96,23 @@ namespace EnterpriseApps.iOS
 				controller.NavigationItem.LeftBarButtonItem = SplitViewController.DisplayModeButtonItem;
 				controller.NavigationItem.LeftItemsSupplementBackButton = true;
 			}
+		}
+
+		public override void ViewWillDisappear (bool animated)
+		{
+			base.ViewWillDisappear (animated);
+			NavigationController.NavigationBar.SetBackgroundImage (new UIImage (), UIBarMetrics.Default);
+			NavigationController.NavigationBar.BarTintColor = BootStrapper.AccentColor;
+			NavigationController.NavigationBar.TintColor = UIColor.White;
+			NavigationController.NavigationBar.ShadowImage = new UIImage ();
+		}
+
+		public override void ViewWillAppear(bool animated){
+			base.ViewWillAppear (animated);
+			NavigationController.NavigationBar.SetBackgroundImage (null, UIBarMetrics.Default);
+			NavigationController.NavigationBar.BarTintColor = _defaultNavigationBarColor;
+			NavigationController.NavigationBar.TintColor = _defaultNavigationBarTintColor;
+			NavigationController.NavigationBar.ShadowImage = _defaultNavigationBarShadowImage;
 		}
 
 		class DataSource : UITableViewSource
@@ -155,14 +180,15 @@ namespace EnterpriseApps.iOS
 
 			public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
 			{
+				var a = ServiceLocator.Current.GetInstance<UsersViewModel> ();
+				a.SelectUserCommand.Execute (_objects [indexPath.Row]);
+
 				if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
-					_controller.DetailViewController.SetDetailItem (_objects [indexPath.Row]);
+
 					return;
 				}
-
-				var detailView = new DetailViewController (_objects [indexPath.Row]);
-				detailView.View.BackgroundColor = BootStrapper.AccentColor;
-				_controller.NavigationController.PushViewController (detailView, true);
+//				_controller.NavigationController.PushViewController (_controller.DetailViewController.NavigationController, true);
+				_controller.SplitViewController.ShowDetailViewController(_controller.DetailViewController, _controller);
 
 
 			}

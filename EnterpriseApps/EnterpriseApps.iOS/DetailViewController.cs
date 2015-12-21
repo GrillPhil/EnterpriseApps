@@ -5,6 +5,7 @@ using EnterpriseApps.Portable.Model;
 using Microsoft.Practices.ServiceLocation;
 using CoreGraphics;
 using System.Threading.Tasks;
+using EnterpriseApps.Portable.ViewModel;
 
 namespace EnterpriseApps.iOS
 {
@@ -24,15 +25,24 @@ namespace EnterpriseApps.iOS
 		private UILabel _cellHeaderLabel;
 		private UILabel _userCellLabel;
 
+		private UserViewModel _userViewModel = ServiceLocator.Current.GetInstance<UserViewModel>();
+
 
 		public DetailViewController (IntPtr handle) : base (handle)
 		{
+//			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
+				_userViewModel.PropertyChanged += (sender, e) => {
+					if(e.PropertyName == "User"){
+						SetDetailItem(_userViewModel.User);
+					}
+				};
+//			}
+			NavigationController.NavigationBar.BackgroundColor = UIColor.Red;
 		}
 
-		public DetailViewController (object user) : base ()
+		public DetailViewController () : base ()
 		{
-			DetailItem = user;
-			_user = DetailItem as User;
+			SetDetailItem(_userViewModel.User);
 		}
 
 		public void SetDetailItem (object newDetailItem)
@@ -41,16 +51,18 @@ namespace EnterpriseApps.iOS
 				DetailItem = newDetailItem;
 				_user = newDetailItem as User;
 				// Update the view
-				ConfigureView ();
+				ConfigureView();
 			}
 		}
 
 		void ConfigureView ()
 		{
+			Title = " ";
+
 			// Update the user interface for the detail item
 			if (IsViewLoaded && DetailItem != null){
-				Title = $"{_user.FirstName} {_user.LastName}";
 				_userPictureImageView.Image = null;
+
 				Task.Run(async() => {
 					var image =  _imageService.GetUserPicture(_user);
 
@@ -58,6 +70,7 @@ namespace EnterpriseApps.iOS
 						_userPictureImageView.Image = image;
 					});
 				});
+
 				_userNameLabel.Text = $"{_user.FirstName} {_user.LastName}";
 				_userNameLabel.SizeToFit ();
 
@@ -76,12 +89,19 @@ namespace EnterpriseApps.iOS
 				_userCellLabel.Text = _user.Cell;
 				_userCellLabel.SizeToFit ();
 			}
-				//detailDescriptionLabel.Text = DetailItem.ToString ();
 		}
 
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
+			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
+				var navigationBar = NavigationController.NavigationBar;
+				navigationBar.BarTintColor = BootStrapper.AccentColor;
+				navigationBar.SetBackgroundImage (new UIImage (), UIBarMetrics.Default);
+				navigationBar.BackgroundColor = BootStrapper.AccentColor;
+				navigationBar.ShadowImage = new UIImage ();
+			}
+
 			// Perform any additional setup after loading the view, typically from a nib.
 			_userPictureImageView = new UIImageView(){
 				BackgroundColor = UIColor.LightGray
@@ -160,7 +180,7 @@ namespace EnterpriseApps.iOS
 			SetLeadingConstraint (_userPictureImageView, View, (nfloat)30.0);
 			var userPictureLeadingConstraint = NSLayoutConstraint.Create (_userPictureImageView, NSLayoutAttribute.LeftMargin, NSLayoutRelation.Equal, View, NSLayoutAttribute.Left, (nfloat)1.0, (nfloat)(40.0));
 			userPictureLeadingConstraint.Active = true;
-			var userPictureTopMarginConstraint = NSLayoutConstraint.Create (_userPictureImageView, NSLayoutAttribute.TopMargin, NSLayoutRelation.Equal, View, NSLayoutAttribute.Top, (nfloat)1.0, (nfloat)100.0);
+			var userPictureTopMarginConstraint = NSLayoutConstraint.Create (_userPictureImageView, NSLayoutAttribute.TopMargin, NSLayoutRelation.Equal, View, NSLayoutAttribute.Top, (nfloat)1.0, (nfloat)80.0);
 			userPictureTopMarginConstraint.Active = true;
 			SetHeightConstraint (_userPictureImageView, (nfloat)150.0);
 			SetWidthConstraint (_userPictureImageView, (nfloat)150.0);
