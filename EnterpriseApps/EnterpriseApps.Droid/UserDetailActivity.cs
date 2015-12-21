@@ -45,6 +45,8 @@ namespace EnterpriseApps.Droid
 				var fragment = new UserDetailFragment ();
 				var fragmentTransaction = SupportFragmentManager.BeginTransaction ();
 				fragmentTransaction.Add (Resource.Id.user_detail_container, fragment).Commit ();
+				var a  = ServiceLocator.Current.GetInstance<UsersViewModel> ();
+				var b = a.SelectedUser;
 				SupportActionBar.Title = $"{_usersViewModel.SelectedUser.FirstName} {_usersViewModel.SelectedUser.LastName}";
 			}
 		}

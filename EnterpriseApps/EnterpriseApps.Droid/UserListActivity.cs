@@ -123,15 +123,15 @@ namespace EnterpriseApps.Droid
 				{
 					if (mTwoPane) {
 						var arguments = new Bundle ();
-						arguments.PutString (UserDetailFragment.ARG_ITEM_ID.ToString (), _holder.mItem.FirstName);
+						//arguments.PutString (UserDetailFragment.ARG_ITEM_ID.ToString (), _holder.mItem.FirstName);
 						UserDetailFragment fragment = new UserDetailFragment ();
-						fragment.Arguments = arguments;
+						//fragment.Arguments = arguments;
 						_fragmentTransaction.Replace (Resource.Id.user_detail_container, fragment).Commit ();
 					} else {
 						Context context = v.Context;
 						ServiceLocator.Current.GetInstance<UsersViewModel> ().SelectUserCommand.Execute (_holder.mItem);
 						Intent intent = new Intent (context, typeof(UserDetailActivity));
-						intent.PutExtra (UserDetailFragment.ARG_ITEM_ID, _holder.mItem.FirstName);
+						//intent.PutExtra (UserDetailFragment.ARG_ITEM_ID, _holder.mItem.FirstName);
 						context.StartActivity (intent);
 					}
 				}

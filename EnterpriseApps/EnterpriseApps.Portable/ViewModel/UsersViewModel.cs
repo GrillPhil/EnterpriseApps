@@ -94,7 +94,7 @@ namespace EnterpriseApps.Portable.ViewModel
         private void SelectUser(User user)
         {
             _userRepository.SetSelectedUser(user);
-			_selectedUser = user;
+			this.SelectedUser = user;
         }
 
         private async Task LoadUsersAsync()
