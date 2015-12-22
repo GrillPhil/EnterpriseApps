@@ -129,6 +129,7 @@
     <Compile Include="Services\ResourceService.cs" />
     <Compile Include="CustomUI\UserCell.cs" />
     <Compile Include="Services\ImageService.cs" />
+    <Compile Include="DataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnterpriseApps.Portable\EnterpriseApps.Portable.csproj">

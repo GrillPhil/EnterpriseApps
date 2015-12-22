@@ -30,13 +30,11 @@ namespace EnterpriseApps.iOS
 
 		public DetailViewController (IntPtr handle) : base (handle)
 		{
-//			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
 				_userViewModel.PropertyChanged += (sender, e) => {
 					if(e.PropertyName == "User"){
 						SetDetailItem(_userViewModel.User);
 					}
 				};
-//			}
 			NavigationController.NavigationBar.BackgroundColor = UIColor.Red;
 		}
 
@@ -63,7 +61,7 @@ namespace EnterpriseApps.iOS
 			if (IsViewLoaded && DetailItem != null){
 				_userPictureImageView.Image = null;
 
-				Task.Run(async() => {
+				Task.Run(() => {
 					var image =  _imageService.GetUserPicture(_user);
 
 					BeginInvokeOnMainThread(() =>{
