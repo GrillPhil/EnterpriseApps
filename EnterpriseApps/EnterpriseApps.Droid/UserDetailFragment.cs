@@ -30,7 +30,7 @@ namespace EnterpriseApps.Droid
  */
 	public class UserDetailFragment:Android.Support.V4.App.Fragment {
 
-		private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel>();
+		private UserViewModel _userViewModel = ServiceLocator.Current.GetInstance<UserViewModel>();
 
 		/**
      	* The content this fragment is presenting.
@@ -46,8 +46,7 @@ namespace EnterpriseApps.Droid
 
 		public override void OnCreate(Bundle savedInstanceState) {
 			base.OnCreate(savedInstanceState);
-			_user = _usersViewModel.SelectedUser;
-			Activity activity = this.Activity;
+			_user = _userViewModel.User;
 		}
 
 
@@ -55,7 +54,6 @@ namespace EnterpriseApps.Droid
 			Bundle savedInstanceState) {
 			View rootView = inflater.Inflate(Resource.Layout.user_detail, container, false);
 
-			// Show the dummy content as text in a TextView.
 			if (_user != null) {
 				((TextView)rootView.FindViewById (Resource.Id.user_name)).Text = $"{_user.FirstName} {_user.LastName}";
 				((TextView)rootView.FindViewById (Resource.Id.mail_header)).Text = $"[Email]";
@@ -68,7 +66,6 @@ namespace EnterpriseApps.Droid
 				var imageView = (ImageView)rootView.FindViewById (Resource.Id.user_image);
 
 				Handler handler = new Handler (Context.MainLooper);
-
 				Task.Run (() => {
 					var imageBitmap = ((ImageService)ServiceLocator.Current.GetInstance<ImageService>()).GetUserPicture(_user);
 					Runnable runnable = new Runnable (() => {

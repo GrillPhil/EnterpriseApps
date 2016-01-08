@@ -32,7 +32,7 @@ namespace EnterpriseApps.Droid
 
 			// Register ViewModels
 			SimpleIoc.Default.Register<UsersViewModel>();
-			SimpleIoc.Default.Register<UserViewModel>();
+			SimpleIoc.Default.Register<UserViewModel>(true);
 			_isInistialized = true;
 		}
 	}

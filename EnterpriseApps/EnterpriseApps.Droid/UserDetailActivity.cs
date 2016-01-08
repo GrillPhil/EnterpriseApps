@@ -21,8 +21,6 @@ namespace EnterpriseApps.Droid
 	[Activity (Label = "Detail")]			
 	public class UserDetailActivity : AppCompatActivity
 	{
-		private UsersViewModel _usersViewModel = ServiceLocator.Current.GetInstance<UsersViewModel> ();
-
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
@@ -47,7 +45,7 @@ namespace EnterpriseApps.Droid
 				fragmentTransaction.Add (Resource.Id.user_detail_container, fragment).Commit ();
 				var a  = ServiceLocator.Current.GetInstance<UsersViewModel> ();
 				var b = a.SelectedUser;
-				SupportActionBar.Title = $"{_usersViewModel.SelectedUser.FirstName} {_usersViewModel.SelectedUser.LastName}";
+				SupportActionBar.Title = "[Detail]";
 			}
 		}
 

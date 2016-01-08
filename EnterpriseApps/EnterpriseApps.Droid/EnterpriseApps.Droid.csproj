@@ -26,15 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <AndroidLinkSkip>
-    </AndroidLinkSkip>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
-    <AndroidSupportedAbis>
-    </AndroidSupportedAbis>
-    <AndroidStoreUncompressedFileExtensions>
-    </AndroidStoreUncompressedFileExtensions>
-    <MandroidI18n>
-    </MandroidI18n>
     <Debugger>Xamarin</Debugger>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
   </PropertyGroup>
@@ -109,6 +101,10 @@
     <AndroidResource Include="Resources\values-v21\styles.xml" />
     <AndroidResource Include="Resources\drawable\TransparentEllipse.png" />
     <AndroidResource Include="Resources\drawable\TransparentEllipse_white.png" />
+    <AndroidResource Include="Resources\menu\main_menu.axml" />
+    <AndroidResource Include="Resources\drawable\icon_search.png" />
+    <AndroidResource Include="Resources\layout-sw700dp\user_list.axml" />
+    <AndroidResource Include="Resources\xml\searchable.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
@@ -136,5 +132,6 @@
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="Resources\values-v21\" />
+    <Folder Include="Resources\layout-sw700dp\" />
   </ItemGroup>
 </Project>
