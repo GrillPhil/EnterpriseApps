@@ -8,9 +8,7 @@ namespace EnterpriseApps.Portable.DTO
 {
     public class RootObject
     {
-        public List<Result> Results { get; set; }
-        public string Nationality { get; set; }
-        public string Seed { get; set; }
-        public string Version { get; set; }
+        public List<User> Results { get; set; }
+        public Info Info { get; set; }
     }
 }

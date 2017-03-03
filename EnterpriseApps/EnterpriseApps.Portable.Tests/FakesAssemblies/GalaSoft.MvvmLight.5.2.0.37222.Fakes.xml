@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GalaSoft.MvvmLight.5.2.0.37222.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService">
+            <summary>Stub type of GalaSoft.MvvmLight.Views.IDialogService</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.#ctor">
+            <summary>Initializes a new instance of type StubIDialogService</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.GalaSoft#MvvmLight#Views#IDialogService#ShowError(System.Exception,System.String,System.String,System.Action)">
+            <summary>Sets the stub of IDialogService.ShowError(Exception error, String title, String buttonText, Action afterHideCallback)</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.GalaSoft#MvvmLight#Views#IDialogService#ShowError(System.String,System.String,System.String,System.Action)">
+            <summary>Sets the stub of IDialogService.ShowError(String message, String title, String buttonText, Action afterHideCallback)</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.GalaSoft#MvvmLight#Views#IDialogService#ShowMessage(System.String,System.String)">
+            <summary>Sets the stub of IDialogService.ShowMessage(String message, String title)</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.GalaSoft#MvvmLight#Views#IDialogService#ShowMessage(System.String,System.String,System.String,System.Action)">
+            <summary>Sets the stub of IDialogService.ShowMessage(String message, String title, String buttonText, Action afterHideCallback)</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.GalaSoft#MvvmLight#Views#IDialogService#ShowMessage(System.String,System.String,System.String,System.String,System.Action{System.Boolean})">
+            <summary>Sets the stub of IDialogService.ShowMessage(String message, String title, String buttonConfirmText, String buttonCancelText, Action`1&lt;Boolean&gt; afterHideCallback)</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.GalaSoft#MvvmLight#Views#IDialogService#ShowMessageBox(System.String,System.String)">
+            <summary>Sets the stub of IDialogService.ShowMessageBox(String message, String title)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.ShowErrorExceptionStringStringAction">
+            <summary>Sets the stub of IDialogService.ShowError(Exception error, String title, String buttonText, Action afterHideCallback)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.ShowErrorStringStringStringAction">
+            <summary>Sets the stub of IDialogService.ShowError(String message, String title, String buttonText, Action afterHideCallback)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.ShowMessageBoxStringString">
+            <summary>Sets the stub of IDialogService.ShowMessageBox(String message, String title)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.ShowMessageStringString">
+            <summary>Sets the stub of IDialogService.ShowMessage(String message, String title)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.ShowMessageStringStringStringAction">
+            <summary>Sets the stub of IDialogService.ShowMessage(String message, String title, String buttonText, Action afterHideCallback)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubIDialogService.ShowMessageStringStringStringStringActionOfBoolean">
+            <summary>Sets the stub of IDialogService.ShowMessage(String message, String title, String buttonConfirmText, String buttonCancelText, Action`1&lt;Boolean&gt; afterHideCallback)</summary>
+        </member>
+        <member name="T:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService">
+            <summary>Stub type of GalaSoft.MvvmLight.Views.INavigationService</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.#ctor">
+            <summary>Initializes a new instance of type StubINavigationService</summary>
+        </member>
+        <member name="P:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.GalaSoft#MvvmLight#Views#INavigationService#CurrentPageKey">
+            <summary>Sets the stub of INavigationService.get_CurrentPageKey()</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.CurrentPageKeyGet">
+            <summary>Sets the stub of INavigationService.get_CurrentPageKey()</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.GalaSoft#MvvmLight#Views#INavigationService#GoBack">
+            <summary>Sets the stub of INavigationService.GoBack()</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.GalaSoft#MvvmLight#Views#INavigationService#NavigateTo(System.String)">
+            <summary>Sets the stub of INavigationService.NavigateTo(String pageKey)</summary>
+        </member>
+        <member name="M:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.GalaSoft#MvvmLight#Views#INavigationService#NavigateTo(System.String,System.Object)">
+            <summary>Sets the stub of INavigationService.NavigateTo(String pageKey, Object parameter)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.GoBack">
+            <summary>Sets the stub of INavigationService.GoBack()</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.NavigateToString">
+            <summary>Sets the stub of INavigationService.NavigateTo(String pageKey)</summary>
+        </member>
+        <member name="F:GalaSoft.MvvmLight.Views.Fakes.StubINavigationService.NavigateToStringObject">
+            <summary>Sets the stub of INavigationService.NavigateTo(String pageKey, Object parameter)</summary>
+        </member>
+    </members>
+</doc>

@@ -9,6 +9,6 @@ namespace EnterpriseApps.Portable.Service
 {
     public interface IHttpService
     {
-        Task<IEnumerable<Result>> GetUsersAsync(int count);
+        Task<IEnumerable<User>> GetUsersAsync(int count);
     }
 }

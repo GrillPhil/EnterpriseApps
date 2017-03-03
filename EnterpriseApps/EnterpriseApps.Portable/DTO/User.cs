@@ -18,8 +18,8 @@ namespace EnterpriseApps.Portable.DTO
         public string Md5 { get; set; }
         public string Sha1 { get; set; }
         public string Sha256 { get; set; }
-        public int Registered { get; set; }
-        public int Dob { get; set; }
+        public string Registered { get; set; }
+        public string Dob { get; set; }
         public string Phone { get; set; }
         public string Cell { get; set; }
         public string BSN { get; set; }

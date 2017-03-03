@@ -6,7 +6,7 @@ namespace EnterpriseApps.Portable.Service
 {
     public class MappingService : IMappingService
     {
-        public IEnumerable<Model.User> MapUsers(IEnumerable<DTO.Result> dtos)
+        public IEnumerable<Model.User> MapUsers(IEnumerable<DTO.User> dtos)
         {
             var models = from dto in dtos
                          select MapUser(dto);
@@ -14,28 +14,28 @@ namespace EnterpriseApps.Portable.Service
             return models;
         }
 
-        private Model.User MapUser(DTO.Result dto)
+        private Model.User MapUser(DTO.User dto)
         {
             var model = new Model.User();
 
-            if (dto == null || dto.User == null)
+            if (dto == null)
                 return null;
 
-            if (dto.User.Name != null)
+            if (dto.Name != null)
             {
-                model.FirstName = dto.User.Name.First.FirstCharToUpper();
-                model.LastName = dto.User.Name.Last.FirstCharToUpper();
+                model.FirstName = dto.Name.First.FirstCharToUpper();
+                model.LastName = dto.Name.Last.FirstCharToUpper();
             }
 
-            if (dto.User.Picture != null)
+            if (dto.Picture != null)
             {
-                model.ThumbnailUrl = dto.User.Picture.Thumbnail;
-                model.PictureUrl = dto.User.Picture.Medium;
+                model.ThumbnailUrl = dto.Picture.Thumbnail;
+                model.PictureUrl = dto.Picture.Medium;
             }
 
-            model.Cell = dto.User.Cell;
-            model.Phone = dto.User.Phone;
-            model.Email = dto.User.Email;
+            model.Cell = dto.Cell;
+            model.Phone = dto.Phone;
+            model.Email = dto.Email;
 
             return model;
         }

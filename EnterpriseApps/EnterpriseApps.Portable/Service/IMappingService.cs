@@ -8,6 +8,6 @@ namespace EnterpriseApps.Portable.Service
 {
     public interface IMappingService
     {
-        IEnumerable<Model.User> MapUsers(IEnumerable<DTO.Result> dtos);
+        IEnumerable<Model.User> MapUsers(IEnumerable<DTO.User> dtos);
     }
 }

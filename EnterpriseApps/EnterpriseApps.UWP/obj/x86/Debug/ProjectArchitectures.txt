@@ -1,0 +1,2 @@
+C:\r\EnterpriseApps\EnterpriseApps\EnterpriseApps.Portable\EnterpriseApps.Portable.csproj;neutral
+C:\r\EnterpriseApps\EnterpriseApps\EnterpriseApps.UWP\EnterpriseApps.UWP.csproj;x86

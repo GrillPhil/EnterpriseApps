@@ -19,7 +19,7 @@ namespace EnterpriseApps.Portable.Service
             _baseUrl = baseUrl;
         }
 
-        public async Task<IEnumerable<Result>> GetUsersAsync(int count)
+        public async Task<IEnumerable<User>> GetUsersAsync(int count)
         {
             using (var httpClient = new HttpClient())
             {

@@ -34,10 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DTO\Info.cs" />
     <Compile Include="DTO\Location.cs" />
     <Compile Include="DTO\Name.cs" />
     <Compile Include="DTO\Picture.cs" />
-    <Compile Include="DTO\Result.cs" />
     <Compile Include="DTO\RootObject.cs" />
     <Compile Include="DTO\User.cs" />
     <Compile Include="ExtensionMethods\ListExtensions.cs" />

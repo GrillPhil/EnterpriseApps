@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EnterpriseApps.Portable.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:EnterpriseApps.Portable.Service.Fakes.StubIHttpService">
+            <summary>Stub type of EnterpriseApps.Portable.Service.IHttpService</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIHttpService.#ctor">
+            <summary>Initializes a new instance of type StubIHttpService</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIHttpService.EnterpriseApps#Portable#Service#IHttpService#GetUsersAsync(System.Int32)">
+            <summary>Sets the stub of IHttpService.GetUsersAsync(Int32 count)</summary>
+        </member>
+        <member name="F:EnterpriseApps.Portable.Service.Fakes.StubIHttpService.GetUsersAsyncInt32">
+            <summary>Sets the stub of IHttpService.GetUsersAsync(Int32 count)</summary>
+        </member>
+        <member name="T:EnterpriseApps.Portable.Service.Fakes.StubIResourceService">
+            <summary>Stub type of EnterpriseApps.Portable.Service.IResourceService</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIResourceService.#ctor">
+            <summary>Initializes a new instance of type StubIResourceService</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIResourceService.EnterpriseApps#Portable#Service#IResourceService#GetString(System.String)">
+            <summary>Sets the stub of IResourceService.GetString(String key)</summary>
+        </member>
+        <member name="F:EnterpriseApps.Portable.Service.Fakes.StubIResourceService.GetStringString">
+            <summary>Sets the stub of IResourceService.GetString(String key)</summary>
+        </member>
+        <member name="T:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository">
+            <summary>Stub type of EnterpriseApps.Portable.Service.IUserRepository</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository.#ctor">
+            <summary>Initializes a new instance of type StubIUserRepository</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository.EnterpriseApps#Portable#Service#IUserRepository#GetUsersAsync">
+            <summary>Sets the stub of IUserRepository.GetUsersAsync()</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository.EnterpriseApps#Portable#Service#IUserRepository#SearchUsers(System.String)">
+            <summary>Sets the stub of IUserRepository.SearchUsers(String query)</summary>
+        </member>
+        <member name="M:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository.EnterpriseApps#Portable#Service#IUserRepository#SetSelectedUser(EnterpriseApps.Portable.Model.User)">
+            <summary>Sets the stub of IUserRepository.SetSelectedUser(User user)</summary>
+        </member>
+        <member name="F:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository.GetUsersAsync">
+            <summary>Sets the stub of IUserRepository.GetUsersAsync()</summary>
+        </member>
+        <member name="F:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository.SearchUsersString">
+            <summary>Sets the stub of IUserRepository.SearchUsers(String query)</summary>
+        </member>
+        <member name="F:EnterpriseApps.Portable.Service.Fakes.StubIUserRepository.SetSelectedUserUser">
+            <summary>Sets the stub of IUserRepository.SetSelectedUser(User user)</summary>
+        </member>
+    </members>
+</doc>
